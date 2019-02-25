@@ -43,7 +43,7 @@ namespace SecretSanta.Domain.Services
 
         public async Task<bool> DeleteUser(int userId)
         {
-            User foundUser = DbContext.Users.Find(userId);
+            User foundUser = await DbContext.Users.FindAsync(userId);
 
             if (foundUser != null)
             {

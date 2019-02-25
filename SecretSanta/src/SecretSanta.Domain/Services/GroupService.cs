@@ -66,7 +66,7 @@ namespace SecretSanta.Domain.Services
             User foundUser = await DbContext.Users.FindAsync(userId);
             if (foundUser == null) return false;
 
-            var groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
+            GroupUser groupUser = new GroupUser { GroupId = foundGroup.Id, UserId = foundUser.Id };
             if (foundGroup.GroupUsers == null)
             {
                 foundGroup.GroupUsers = new List<GroupUser>();
