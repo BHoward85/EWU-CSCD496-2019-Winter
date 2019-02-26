@@ -27,17 +27,16 @@ namespace SecretSanta.Api.Controllers
 
         // GET api/User
         [HttpGet]
-        [Produces(typeof(ICollection<UserViewModel>))]
-        public async Task<IActionResult> Get()
+        public async Task<ActionResult<ICollection<UserViewModel>>> GetAllUsers()
         {
-            return Ok((await UserService.FetchAll()).Select(x => Mapper.Map<UserViewModel>(x)));
+            var users = await UserService.FetchAll();
+            return Ok(users.Select(x => Mapper.Map<UserViewModel>(x)));
         }
 
         [HttpGet("{id}")]
-        [Produces(typeof(UserViewModel))]
-        public async Task<IActionResult> Get(int id)
+        public async Task<ActionResult<UserViewModel>> GetUser(int id)
         {
-            User fetchedUser = await UserService.GetById(id);
+            var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
@@ -48,28 +47,27 @@ namespace SecretSanta.Api.Controllers
 
         // POST api/User
         [HttpPost]
-        [Produces(typeof(UserViewModel))]
-        public async Task<IActionResult> Post(UserInputViewModel viewModel)
+        public async Task<ActionResult<UserViewModel>> CreateUser(UserInputViewModel viewModel)
         {
             if (User == null)
             {
                 return BadRequest();
             }
 
-            User createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
+            var createdUser = await UserService.AddUser(Mapper.Map<User>(viewModel));
 
-            return CreatedAtAction(nameof(Get), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
+            return CreatedAtAction(nameof(GetUser), new { id = createdUser.Id }, Mapper.Map<UserViewModel>(createdUser));
         }
 
         // PUT api/User/5
         [HttpPut]
-        public async Task<IActionResult> Put(int id, UserInputViewModel viewModel)
+        public async Task<ActionResult> UpdateUser(int id, UserInputViewModel viewModel)
         {
             if (viewModel == null)
             {
                 return BadRequest();
             }
-            User fetchedUser = await UserService.GetById(id);
+            var fetchedUser = await UserService.GetById(id);
             if (fetchedUser == null)
             {
                 return NotFound();
@@ -82,7 +80,7 @@ namespace SecretSanta.Api.Controllers
 
         // DELETE api/User/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> Delete(int id)
+        public async Task<ActionResult> DeleteUser(int id)
         {
             if (id <= 0)
             {
